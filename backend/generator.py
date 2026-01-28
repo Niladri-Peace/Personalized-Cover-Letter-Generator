@@ -213,18 +213,32 @@ I am enthusiastic about the opportunity to contribute my skills and experience t
         if not user_input:
             return {}
         
-        # Extract name (simple heuristic)
+        # Extract name (improved heuristic)
         name_patterns = [
+            # Explicit name statements
             r'(?:my name is|i am|i\'m)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)',
-            r'([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\s+(?:is|am|have|possess)'
+            r'([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\s+(?:is|am|have|possess)',
+            # Name at beginning of input
+            r'^([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\s*[,.]?\s*(?:have|am|with|experienced)',
+            # Name with experience patterns
+            r'([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\s+(?:with|having)\s+\d+\s*(?:years?|yrs?)',
+            # Simple name followed by skills
+            r'^([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\s*[,-]?\s*(?:experienced|skilled|proficient)',
+            # Name followed by numbers (years of experience)
+            r'^([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\s+\d+',
+            # Just a name at the start (fallback)
+            r'^([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)'
         ]
         
         name = "Candidate"
         for pattern in name_patterns:
-            match = re.search(pattern, user_input)
+            match = re.search(pattern, user_input, re.IGNORECASE)
             if match:
-                name = match.group(1).strip()
-                break
+                extracted_name = match.group(1).strip()
+                # Validate that it looks like a real name (2+ letters, starts with capital)
+                if len(extracted_name) >= 2 and extracted_name[0].isupper():
+                    name = extracted_name
+                    break
         
         # Extract experience
         experience_patterns = [

@@ -189,7 +189,19 @@ def process_job_description(job_description):
     print()
     
     # Get user input
-    user_input = input("📝 Enter your details (name, experience, skills): ").strip()
+    user_input = input("⚡ Enter your details (name, experience, skills): ").strip()
+    
+    # Try to extract name from user input
+    from generator import CoverLetterGenerator
+    generator = CoverLetterGenerator()
+    user_info = generator.extract_user_info(user_input)
+    
+    # If name not found, ask for it explicitly
+    if user_info.get('name') == 'Candidate':
+        name = input("👤 Name not detected. Please enter your name: ").strip()
+        if name:
+            user_input = f"My name is {name}. {user_input}"
+            user_info = generator.extract_user_info(user_input)
     
     # Extract company name from job description or ask user
     target_company = input("🏢 Company name (optional - press Enter to skip): ").strip()
@@ -774,6 +786,17 @@ def generate_from_skills():
     
     # Get user input
     user_input = input("📝 Enter your details (name, experience, skills): ").strip()
+    
+    # Try to extract name from user input
+    generator = CoverLetterGenerator()
+    user_info = generator.extract_user_info(user_input)
+    
+    # If name not found, ask for it explicitly
+    if user_info.get('name') == 'Candidate':
+        name = input("👤 Name not detected. Please enter your name: ").strip()
+        if name:
+            user_input = f"My name is {name}. {user_input}"
+            user_info = generator.extract_user_info(user_input)
     
     # Ask for target role
     target_role = input("🎯 What type of position are you applying for? (e.g., Frontend Developer, Data Scientist, etc.): ").strip()
