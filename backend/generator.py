@@ -181,9 +181,11 @@ I am enthusiastic about the opportunity to contribute my skills and experience t
                     position = match.group(0).strip()
                 else:
                     position = match.group(1).strip()
-                    # Clean up the position - remove trailing punctuation and extra words
-                    position = re.sub(r'\s+(?:with|for|who|that|and|the|a|an).*$', '', position, flags=re.IGNORECASE)
+                    # Clean up the position - remove trailing phrases and extra words
+                    position = re.sub(r'\s+(?:with|for|who|that|and|the|a|an|to|join|our|innovative|team).*$', '', position, flags=re.IGNORECASE)
                     position = re.sub(r'[.!?]+$', '', position).strip()
+                    # Also clean up common position phrases
+                    position = re.sub(r'\s+(?:position|role|job)$', '', position, flags=re.IGNORECASE).strip()
                 break
         
         # Extract skills
@@ -326,6 +328,9 @@ I am enthusiastic about the opportunity to contribute my skills and experience t
         """Enhance natural flow and readability."""
         # Remove repetitive phrases
         text = re.sub(r'\b(I am|I have|I believe)\s+\1+', r'\1', text, flags=re.IGNORECASE)
+        
+        # Clean up trailing 'and' in signatures
+        text = re.sub(r'([A-Z][a-z\s]+)\s+and\s*$', r'\1', text, flags=re.MULTILINE)
         
         # Only add transitions where appropriate (not too many)
         # This was adding too many "Additionally" - let's remove it for now

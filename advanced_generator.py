@@ -405,6 +405,11 @@ def process_resume(resume_text):
         # Ask for experience if not found
         if experience == 'Not found':
             experience = input("Experience not found in resume. Please enter your years of experience: ").strip()
+            # Extract just the number from the input
+            import re
+            years_match = re.search(r'\d+', experience)
+            if years_match:
+                experience = years_match.group(1) + "+ years"
         
     else:
         # Ask for confirmation only if extraction failed
@@ -417,6 +422,12 @@ def process_resume(resume_text):
         name = input(f"Name detected: {extracted_info.get('name', 'Not found')}. Press Enter to accept or enter correct name: ").strip()
         experience = input(f"Experience detected: {extracted_info.get('experience', 'Not found')}. Press Enter to accept or enter correct experience: ").strip()
         skills = input(f"Skills detected: {extracted_info.get('skills', 'Not found')}. Press Enter to accept or enter correct skills: ").strip()
+        
+        # Extract just the number from experience input
+        if experience and experience != 'Not found':
+            years_match = re.search(r'\d+', experience)
+            if years_match:
+                experience = years_match.group(1) + "+ years"
     
     # Create user input from resume
     user_input = f"My name is {name or extracted_info.get('name', 'Candidate')} and I have {experience or extracted_info.get('experience', 'relevant experience')}. I am skilled in {skills or extracted_info.get('skills', 'various technologies')}."
